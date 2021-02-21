@@ -88,7 +88,7 @@ def copia_ficheiro(de, para):
 def lista_floats(lista):
     return [float(num) for num in lista]
 
-#10 -  Escreva uma função media que calcula a média de uma lista de números. Verifique que a função levanta a exceção ZeroDivisionError quando a lista estiver vazia.
+#10 - Escreva uma função media que calcula a média de uma lista de números. Verifique que a função levanta a exceção ZeroDivisionError quando a lista estiver vazia.
 #Exemplos:
 """
     >>> l = [1, 2.0]; media(l)
@@ -117,7 +117,7 @@ def imprime_medias(caminho):
     with open(caminho) as f:
         for linha in f:
             try:
-                print(round(media(lista_floats([num for num in linha[:-1].split(' ') if num])), 2))
+                print(round(media(lista_floats(linha.split())), 2))
             except ZeroDivisionError:
                 print('linha vazia')
             except ValueError:
@@ -125,15 +125,23 @@ def imprime_medias(caminho):
 #   b) Adapte a versão da alínea anterior de modo a que a função pare ao primeiro erro, depois de escrever a mensagem de erro adequada.
 def imprime_medias_stop(caminho):
     with open(caminho) as f:
-        for linha in f:
-            try:
-                print(round(media(lista_floats([num for num in linha[:-1].split(' ') if num])), 2))
-            except ZeroDivisionError:
-                print('linha vazia')
-                return
-            except ValueError:
-                print('linha mal formada')
-                return
+        try:
+            for linha in f:
+                print(round(media(lista_floats(linha.split())), 2))
+        except ZeroDivisionError:
+            print('linha vazia')
+        except ValueError:
+            print('linha mal formada')
+            
+#12 - Escreva uma função principal sem parâmetros que pede ao utilizador o nome de um ficheiro de temperaturas, e chama a função imprime_medias passando o nome do ficheiro. Apanhe a exceção IOError da função imprime_medias relativa à tentativa falhada de abrir o ficheiro e imprima uma mensagem adequada. Utilize a função input para ler uma linha do canal de entrada. Ignore exceção EOFError que esta função pode eventualmente levantar
+def principal():
+    caminho = input() #sem texto para o judge n confundir
+    try:
+        imprime_medias(caminho)
+    except IOError:
+        print('Erro Input/Output')
+    except EOFError:
+        pass
 
 #13 - Por vezes os ficheiros de observações trazem informação sobre os dado sna forma de linhas comentadas, cada qual iniciada pelo carater cardinal #. Eis um exemplo:
 """
@@ -158,10 +166,28 @@ def medias_salta_comentario(caminho):
         linha = salta_comentario(f)
         while linha:
             try:
-                print(round(media(lista_floats([num for num in linha.strip().split(' ') if num])), 2))
+                print(round(media(lista_floats(linha.split())), 2))
             except ZeroDivisionError:
                 print('linha vazia')
             except ValueError:
                 print('linha mal formada')
             finally:
                 linha = salta_comentario(f)
+
+#15 - Escreva uma função lista_para_ficheiro que, dada uma lista e o nome de um ficheiro, escreve os vários elementos da lista, um por linha, no ficheiro
+def lista_para_ficheiro(lista, caminho):
+    with open(caminho, 'w') as f:
+        f.writelines([str(e) + '\n' for e in lista])
+
+#16 - Usando a função lista_para_ficheiro, altere a função do exercício 11, de modo a escrever as médias num dado ficheiro. Apelide-a de medias_para_ficheiro. Deve receber duas strings com os nomes dos dois ficheiros envolvidos.
+def medias_para_ficheiro(inp, out):
+    with open(inp) as f:
+        lista = []
+        for linha in f:
+            try:
+                lista.append(round(media(lista_floats(linha.split())), 2))
+            except ZeroDivisionError:
+                lista.append('linha vazia')
+            except ValueError:
+                lista.append('linha mal formada')
+        lista_para_ficheiro(lista, out)    
