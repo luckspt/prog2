@@ -134,6 +134,7 @@ def diferenca(l1, l2):
     return resultado
 
 #7 - Analise a complexidade assintótica da função unicos.
+# O(n)
 def unicos(lista):
     """Recebe uma lista ordenada e devolve uma outra lista contendo exatamente uma ocorrência de cada elemento da lista original
     
@@ -150,3 +151,86 @@ def unicos(lista):
         [lista[i] for i in range(len(lista)-1)
             if lista[i] != lista[i+1]]
         + [lista[-1]])
+
+#8 - Analise a complexidade assintótica da função inverter.
+# O(n)
+def inverter(lista):
+    """Inverte a ordem dos elementos de uma lista
+    
+    Args:
+        lista (list): lista original
+        
+    Ensures: a lista é alterada, invertendo a ordem dos seus elementos
+    """
+    for i in range(len(lista)//2):                      # O(n/2) = O(n)
+        lista[i], lista[-1-i] = lista[-1-i], lista[i]   # O(1)
+
+#9 - A função minimo devolve o valor mínimo de uma lista.
+def minimo(lista):
+    copia = list(lista) # O(n)
+    copia.sort()        # O(n log n)
+    return copia[0]     # O(1)
+"""
+    a) Analise a complexidade assintótica da solução dada.
+    # O(n log n)
+
+    b) Proponha uma solução linear
+"""
+def prob9b(lista):
+    mini = lista[0]
+    for num in lista:
+        if num < mini:
+            mini = num
+    return num
+
+#10 - As funções sem_repetidos1 e sem_repetidos2 verificam se uma lista não tem repetidos
+def sem_repetidos1(l):          # O(n^2)
+    for i in range(len(l)):     # O(n)
+        if l[i] in l[(i+1):]:   # O(n-1)
+            return False        # O(1)
+    return True                 # O(1)
+
+def sem_repetidos2(l):              # O(n log n)
+    copia = list(l)                  # O(n)
+    copia.sort()                    # O(n log n)
+    for i in range(len(l) - 1):     # O(n)
+        if copia[i] == copia[i+1]:  # O(1)
+            return False            # O(1)
+    return True                     # O(1)
+"""
+    a) Analise a complexidade assintótica de cada uma das soluções.
+        1 - O(n^2)
+        2 - O(n log n)
+    b)  Proponha uma solução linear. Sugestão: converta a lista num conjunto
+"""
+def prob10b(lst):
+    return len(set(lst)) == len(lst)    # O(n)
+
+def prob10b2(lst):
+    dic = { i: False for i in len(lst)} # O(n)
+    return len(dic) == len(lst)         # O(1)
+
+#11 - A seguinte função calcula as médias dos prefixos de uma lista.
+def media_prefixos(l):
+    """"
+    Requires: uma lista de números
+    Ensures: devolve uma lista m onde m[i] é a médiados elementos l[0] ,... , l[i-1]
+    """
+    m = []                          # O(1)
+    for i in range(len(l)):         # O(n)
+        soma = 0.0                  # O(n)
+        for j in range(i + 1):      # O(i)
+            soma += l[j]            # O(1)
+        m.append(soma / (i + 1))    # O(1)
+    return m                        # O(1)
+"""
+    a)  Verifique que a função tem um tempo de execução quadrático.
+    b)  Apresente uma solução com tempo linear. Sugestão: calcule incrementalmente a média de cada um dos prefixos através da seguinte fórmula
+    { m[0] = l[0]
+    { m[k+1] = (m[k] * (k + 1) + l[k+1]) / (k+2)
+"""
+def prob11b(l):
+    m = [l[0]]                                  # O(1)
+    for k in range(1, len(l)):                  # O(n)
+        m.append( (m[-1]*k + l[k]) / (k+1) )    # O(1)
+    return m                                    # O(1)
