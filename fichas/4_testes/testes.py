@@ -200,6 +200,39 @@ def substituir(lista, antigo, novo):
 # >1        | 1          | [-1,-2]      | -1     | 5    | [5, -2]
 # >1        | >1         | [-1,-2, -1]  | -1     | 5    | [5, -2, 5]
 
+#7 -  Considere o predicadoe_palindromo indicado abaixo.
+def e_palindromo(string):
+    """verifica se uma dada string é um palíndromo (igual leitura em ambos os sentidos)
+
+    Args:
+        string (str): string a verificar
+
+    Returns:
+        bool: True se string é palíndromo, False c.c.
+    """
+    if len(string) == 0:
+        return True
+    elif string[0] != string[-1]:
+        return False
+    else:
+        return e_palindromo(string[1:-1])
+
+#Escreva uma bateria de testes para esta função, seguindo os passos do exercício 5. Considere as seguintes características:
+#   > Paridade (zero, par, ímpar) do tamanho da string.
+#   > A string é um palíndromo?
+"""
+    CARACTERISTICAS         |           TESTES
+Paridade    | Palindromo    |   Entrada     |   Saída
+------------+---------------+---+-----------------------+---------------+------------- 
+    0       |   True        |     ''        |   True
+   par      |   True        |   'abba'      |   True
+  impar     |   True        |    'aba'      |   True
+    ---------------------------------------------------------------------------------
+    0       |   True        |           Inviável
+   par      |   False       |   'abcd'      |   False
+  impar     |   False       |   'abcde'     |   False
+"""
+
 #8 - Considere a função intersecao indicada abaixo:
 def intersecao (lista1, lista2):
     """lista interseção de duas listas.
@@ -232,6 +265,100 @@ def intersecao (lista1, lista2):
 # F         | F         | l2 C      | ([4,5,6],[5,6])   | [5,6]
 # F         | F         | nenhum    | ([1,2,3],[4,5,6]) | []
 # F         | F         | outros    | ([1,2,3],[2,6,7]) | [2]
+
+
+#9 - Considere a função potencia_natural(base, expoente).
+# A base é um número qualquer; o expoente é um número inteiro não negativo.
+# Escreva uma bateria de testes para esta função, seguindo os passos do exercício 5. Considere as seguintes características:
+#   > Sinal (negativo, zero, positivo) da base;
+#   > Sinal (zero, positivo) do expoente;
+#   > A base é um número inteiro?
+def prob9(base, expoente):
+    """
+    #>>> prob9(-7, 0)
+    #-1
+    #>>> prob9(-7.4, 0)
+    #-1.0
+    >>> prob9(0, 0)
+    1
+    >>> prob9(50, 0)
+    1
+    >>> prob9(-10, 1)
+    -10
+    >>> prob9(0, 2)
+    0
+    >>> prob9(3, 3)
+    27
+
+    >>> prob9(0.0, 0)
+    1.0
+    >>> prob9(50.2, 0)
+    1.0
+    >>> prob9(-7.7, 1)
+    -7.7
+    >>> prob9(0.0, 2)
+    0.0
+    >>> prob9(0.5, 2)
+    0.25
+    """
+    return base**expoente
+
+"""
+            CARACTERISTICAS             |       TESTES
+    Base    |   Expoente    |   Inteiro |   Entrada |   Saída
+------------+---------------+-----------+-----------+---------- 
+    -       |       0       |   True    |  (-7, 0)  |   0
+    0       |       0       |   True    |   (0, 0)  |   0
+    +       |       0       |   True    |  (50, 0)  |   1
+    ------------------------------------------------------
+    -       |       +       |   True    | (-10, 1)  |  -10
+    0       |       +       |   True    |   (0, 2)  |   0
+    +       |       +       |   True    |   (3, 3)  |   27
+    ------------------------------------------------------
+    -       |       0       |   False   | (-7.4, 0) |   -1.0
+    0       |       0       |   False   |  (0.0, 0) |   0.0
+    +       |       0       |   False   | (50.2, 0) |   1.0
+    ------------------------------------------------------
+    -       |       +       |   False   | (-7.7, 1) |  -7.7
+    0       |       +       |   False   |  (0.0, 2) |   0.0
+    +       |       +       |   False   |  (0.2, 2) |  0.25
+"""
+
+#10 - Considere a função inverter(lista) que inverte uma lista qualquer.
+# A função não devolve coisa nenhuma; em vez disso altera a lista passada como parâmetro.
+# Escreva uma bateria de testes para esta função, seguindo os passos do exercício 5. Considere as seguintes características:
+#   > Número de elementos na lista;
+#   > A lista tem elementos repetidos?
+def prob10(lst):
+    """
+    >>> lst = []; prob10(lst); lst
+    []
+    >>> lst = [1]; prob10(lst); lst
+    [1]
+    >>> lst = [1, 1, 3]; prob10(lst); lst
+    [3, 1, 1]
+    >>> lst = []; prob10(lst); lst
+    []
+    >>> lst = [1]; prob10(lst); lst
+    [1]
+    >>> lst = [1, 2, 3]; prob10(lst); lst
+    [3, 2, 1]
+    """
+    for idx in range(len(lst) // 2):
+        lst[idx], lst[-idx-1] = lst[-idx-1], lst[idx]
+
+"""
+            CARACTERISTICAS     |       TESTES
+    Elementos   |   Repetidos   |   Antes       |   Depois
+--------------------+-----------+---------------+---------- 
+        0       |   True        |           Inviável
+        1       |   True        |           Inviável
+        3       |   True        |   [1, 1, 3]   |   [3, 1, 1]
+    ---------------------------------------------------------
+        0       |   False       |       []      |   []
+        1       |   False       |       [1]     |   [1]
+        3       |   False       |   [1, 2, 3]   |   [3, 2, 1]
+"""
 
 # 12 - Escreva uma bateria de testes para a função conta_positivos (exercício 1) utilizando a técnica da partição de espaço de entrada.
 def prob12(v):
@@ -458,8 +585,124 @@ len(lst)
 tem nums negativos
 """
 
+# 17 - Considere a função obtem indicada abaixo:
+def prob17(lista, indice):
+    """elemento da lista na posição dada pelo índice
+
+    Args:
+        lista (list): uma lista
+        indice (int): número entre 0 e len(lista) -1.
+
+    Raises:
+        IndexError: caso indice < 0 ou indice >= len(lista)
+        TypeError: caso indice não seja um número inteiro
+
+    Returns:
+        any: elemento na posição dada pelo índice
+
+    >>> prob17([], -3)
+    Traceback (most recent call last):
+    ...
+    IndexError: list index out of range
+    >>> prob17([], 0)
+    Traceback (most recent call last):
+    ...
+    IndexError: list index out of range
+    >>> prob17([], 6)
+    Traceback (most recent call last):
+    ...
+    IndexError: list index out of range
+    >>> prob17([1, 6], -1)
+    6
+    >>> prob17([9, 2, 4], 0)
+    9
+    >>> prob17([1, 7, 4], 1)
+    7
+    >>> prob17([], -3.0)
+    Traceback (most recent call last):
+    ...
+    TypeError: list indices must be integers or slices, not float
+    >>> prob17([], 0.0)
+    Traceback (most recent call last):
+    ...
+    TypeError: list indices must be integers or slices, not float
+    >>> prob17([], 6.0)
+    Traceback (most recent call last):
+    ...
+    TypeError: list indices must be integers or slices, not float
+    >>> prob17([1, 6], -1.0)
+    Traceback (most recent call last):
+    ...
+    TypeError: list indices must be integers or slices, not float
+    >>> prob17([9, 2, 4], 0.0)
+    Traceback (most recent call last):
+    ...
+    TypeError: list indices must be integers or slices, not float
+    >>> prob17([1, 7, 4], 1.0)
+    Traceback (most recent call last):
+    ...
+    TypeError: list indices must be integers or slices, not float
+    """
+
+    return lista[indice]
+# Leia a nota do exercício 16. Escreva uma bateria de testes para esta função utilizando a técnica da partição de espaço de entrada. Siga os passos do exercício 12
+"""
+Caracteristicas:
+    elementos: 0, >1
+    sinal indice: -, 0, +
+    indice inteiro: True False
+    
+            CARACTERISTICAS         |       TESTES
+Elementos   |   Indice  |   Inteiro |   Entrada         |   Saída
+------------+-----------+-----------+-------------------+------------------ 
+     0      |    -      |   True    |   ([], -3)        |   IndexError
+     0      |    0      |   True    |   ([], 0)         |   IndexError
+     0      |    +      |   True    |   ([], 6)         |   IndexError
+    ------------------------------------------------------------------
+     2      |    -      |   True    |   ([1, 6], -1)    |   6
+     3      |    0      |   True    |   ([9, 2, 4], 0)  |   9
+     3      |    +      |   True    |   ([1, 7, 4], 1)  |   7
+    ------------------------------------------------------------------
+     0      |    -      |   False    |   ([], -3.0)     |   TypeError
+     0      |    0      |   False    |   ([], 0.0)      |   TypeError
+     0      |    +      |   False    |   ([], 6.0)      |   TypeError
+    -------------------------------------------------------------------
+     2      |    -      |   False    | ([1, 6], -1.0)   |   TypeError
+     3      |    0      |   False    | ([9, 2, 4], 0.0) |   TypeError
+     3      |    +      |   False    | ([1, 7, 4], 1.0) |   TypeError
+"""
+
+#18 - Considere a seguinte especificação da função unicos.
+# A função recebe uma lista e devolve uma outra contendo exactamente uma ocorrência de cada elemento da lista original. A lista original está ordenada; a lista resultado deverá estar também ordenada. A lista original não deve ser alterada.
+# Escreva uma bateria de testes para esta função utilizando a técnica da partição de espaço de entrada. Siga os passos do exercício 12
+def prob18(lst):
+    """
+    >>> prob18([])
+    []
+    >>> prob18([1])
+    [1]
+    """
+    return list(set(lst))
+
+"""
+Caracteristicas:
+    elementos: 0, 1, >1
+    nums repetidos: bool
 
 
+    CARACTERISTICAS     |       TESTES
+Elementos   | Repetidos |   Entrada |   Saída
+------------+-----------+-----------+---------- 
+    0       |   True    |       Inviável
+    0       |   False   |   []      |   []
+    --------------------------------------------------
+    1      |   True     |       Inviável
+    1      |   False    |   [1]     |   [1]
+    --------------------------------------------------
+    3      |   True     | [1, 1, 7] |   [1, 7]
+    3      |   False    | [2, 6, 8] |   [2, 6, 8]
+
+"""
 
 
 
