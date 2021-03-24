@@ -1,3 +1,6 @@
+import functools
+import itertools
+
 # 1- Escreva expressões lambda para as seguintes funções:
 # a) Dobro de x
 prob1a = lambda x: x * 2
@@ -181,6 +184,48 @@ def prob9(*iters):
 # f) reduce(lambda acc, y: acc + y if acc > 0 else y, [4, -3, -2, -1])
 # g) reduce(lambda acc, y: acc**2 + y, range(5))
 # Não se esqueça de fazer import operator para as primeiras quatro alíneas.
+
+
+#13
+
+#15 - Escreva a função filter recorrendo apenas à função reduce.
+def prob15(f, lst):
+    return functools.reduce(lambda acc, el: acc+[el] if f(el) else acc, lst, [])
+
+#16 - Escreva a função map recorrendo apenas à função reduce.
+
+
+#17 - Defina as seguintes funções:
+# a) a função total, de modo a que total(f, n) seja f(0)+ f(1)+ ... + f(n).
+"""
+Por exemplo:
+>>> total(lambda x: x**2, 4)
+30
+"""
+def prob17a(f, n):
+    return functools.reduce(lambda acc, el: acc + f(el), range(n+1), 0)
+
+# b) a função total_superior, de modo a que total_superior(f) é a função que, no ponto n, retorna f(0)+ f(1)+ ... + f(n).
+"""
+Exemplo:
+>>> total_superior(lambda x: x**2)(4)
+30
+"""
+def prob17b(f):
+    return lambda n: prob17a(f, n)
+
+#18 - A função take retorna os primeiros n elementos de uma lista. Escreva esta função recorrendo à função islice
+def prob18(lst, n):
+    return list(itertools.islice(lst, n))
+
+#19 - A função drop retorna os últimos n elementos de uma lista. Escreva esta função recorrendo à função islice.
+def prob19(lst, n):
+    comp = len(lst)
+    return list(itertools.islice(lst, comp-n, comp))
+
+#20 - Escreva a função enumerate recorrendo à função zip.
+def prob20(lst):
+    return zip(lst, range(len(lst)))
 
 # Testes
 if __name__ == '__main__':
