@@ -227,6 +227,99 @@ def prob19(lst, n):
 def prob20(lst):
     return zip(lst, range(len(lst)))
 
+#21 - Na pasta Documentos do Moodle pode encontrar um ficheiro olimpicos.py que possui informação sobre os atletas que participaram nos Jogos Olímpicos de 2016 no Rio de Janeiro, sob a formade uma lista de listas atletas. Descarregue este ficheiro para o seu computador. Pode obter a lista de listas através da instrução
+# >>> from olimpicos import atletas
+from olimpicos import atletas
+
+# ID, nome, sexo, idade, altura, peso, país de origem, código do país de origem, desporto, evento, e medalha ('NA', 'Bronze', 'Silver' ou 'Gold')
+# Utilizando a função group by do módulo itertools, responda às seguintes questões:
+# a) Quantas medalhas foram alcançadas pelos diferentes países?
+def prob21a():
+    atletasSortedPais = sorted(atletas, key=lambda el: el[7])
+    atletasComMedalhas = filter(lambda el: el[-1] != 'NA', atletasSortedPais)
+    paisesAgrupados = itertools.groupby(atletasComMedalhas, key=lambda el: el[7])
+    paisesMapped = map(lambda el: [el[0], len(list(el[1]))], paisesAgrupados)
+
+    paisesSort = sorted(paisesMapped, key=lambda el: el[1], reverse=True)
+    print(paisesSort)
+
+# b) Qual foi a atleta (mulher) mais medalhada?
+def prob21b():
+    ordenadosNome = sorted(atletas, key=lambda el: el[1])
+    medalhas = filter(lambda x: x[-1] != "NA" and x[2] != "M", ordenadosNome)
+    agruparMulheres = itertools.groupby(medalhas, key=lambda el: el[1])
+    contarMedalhas = map(lambda x: (x[0], len(list(x[1]))), agruparMulheres)
+    print(sorted(contarMedalhas, key=lambda el: el[1], reverse=True)[:5]) 
+
+# c) Quantas medalhas de Ouro, Prata, e Bronze, foram alcançadas pela Espanha?
+def prob21c():
+    espanhois = filter(lambda el: el[7] == 'ESP' and el[-1] != 'NA', atletas)
+    espanhoisSort = sorted(espanhois, key=lambda el: el[-1])
+    medalhas = itertools.groupby(espanhoisSort, key=lambda el: el[-1])
+    medalhasMapped = map(lambda el: (el[0], len(list(el[1]))), medalhas)
+    print(list(medalhasMapped))
+
+# d) Quantos atletas portugueses medem 160cm de altura ou menos? Nota: conte cada atleta apenas uma vez.
+def prob21d():
+    portugueses160cm = filter(lambda el: el[7] == 'POR' and el[4] <= 160, atletas)
+    portuguesesSorted = sorted(portugueses160cm, key=lambda el: el[0])
+    portuguesesGroupped = itertools.groupby(portuguesesSorted, key=lambda el: el[0])
+    print(len(list(portuguesesGroupped)))
+
+# e) Que país competiu com a equipa Olímpica mais leve (em média)? Nota: Descarte atletas para os quais a informação sobre o peso não existe, 'NA'.
+def mapPaises(pais):
+    codigo, atletas = pais
+    atletasPeso = list(map(lambda el: el[5], atletas))
+
+    return (codigo, sum(atletasPeso) / len(atletasPeso))
+
+def prob21e():
+    atletasComPeso = filter(lambda el: el[5] != 'NA', atletas)
+    atletasSortedPais = sorted(atletasComPeso, key=lambda el: el[7])
+    paisesAgrupados = itertools.groupby(atletasSortedPais, key=lambda el: el[7])
+    paisesMapped = map(mapPaises, paisesAgrupados)
+    paisesSorted = sorted(paisesMapped, key=lambda el: el[1])
+    print(list(paisesSorted)[0])
+
+#22 - Na pasta Documentos do Moodle pode encontrar um ficheiro movimentos.py que possui informação sobre várias transações de um agregado familiar entre junho de 2019 e junho de 2020. Esta informação encontra-se sob a forma de uma lista de listas movimentos. Descarregue este ficheiro para o seu computador. Pode obter a lista de listas através da instrução
+# >>> from movimentos import movimentos
+from movimentos import movimentos
+# Verifique que a tabela tem 2000 linhas e que a primeira linha da tabela é
+# >>> print(movimentos[0])
+# ['Francisco', -13.06, '2019-06-20', 'curso']
+# Os vários campos de cada linha significam, por ordem:
+# nome, valor da transação, data de execução, e categoria.
+# Utilizando a função groupby do módulo itertools, responda às seguintes questões:
+ 
+# a)  Quanto dinheiro foi gasto (despesa) em cada categoria?
+def mapDinheiro(obj):
+    nome, registos = obj
+
+    mapRegistos = map(lambda el: el[1], registos)
+    return (nome, sum(mapRegistos))
+
+def prob22a():
+    categoriasSorted = sorted(movimentos, key=lambda el: el[-1])
+    categoriasGroupped = itertools.groupby(categoriasSorted, key=lambda el: el[-1])
+    dinheiroMapped = map(mapDinheiro, categoriasGroupped)
+    print(list(dinheiroMapped))
+
+# b)  Quanto dinheiro foi obtido (receita) por cada pessoa?
+def prob22b():
+    receitas = filter(lambda el: el[1] > 0, movimentos)
+    receitasSorted = sorted(receitas, key=lambda el: el[0])
+    receitasGroupped = itertools.groupby(receitasSorted, key=lambda el: el[0])
+    dinheiroMapped = map(mapDinheiro, receitasGroupped)
+    print(list(dinheiroMapped))
+
+# c)  Qual o saldo (receita menos despesa) do Francisco durante cada mês de 2019?
+def prob22c():
+    francisco2019 = filter(lambda el: el[0] == 'Francisco' and el[2][:4] == '2019', movimentos)
+    francisco2019Meses = map(lambda el: (el[0], el[1], el[2][:7]), francisco2019)
+    mesesSorted = sorted(francisco2019Meses, key=lambda el: el[2])
+    mesesGrouped = itertools.groupby(mesesSorted, lambda el: el[2])
+    dinheiroMapped = map(mapDinheiro, mesesGrouped)
+
 # Testes
 if __name__ == '__main__':
     import doctest
