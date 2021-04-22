@@ -1,5 +1,4 @@
-import sys
-import csv
+from csv import DictWriter
 from random import randint, seed
 
 seed(56926)
@@ -20,7 +19,7 @@ def genData(qtd):
 qtd = int(input('Bora lá chefe quantas linhas queres pa? '))
 nome = input('E o nome do fchero hm? ')
 with open(f'{nome}.csv', 'w') as f:
-    writer = csv.DictWriter(f
+    writer = DictWriter(f
         , header
         , delimiter=';')
 
