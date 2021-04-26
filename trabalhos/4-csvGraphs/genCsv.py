@@ -2,11 +2,11 @@ from csv import DictWriter
 from random import randint, seed
 
 seed(56926)
-header = [
-            chr(c) 
-            for c
-            in range(ord(' '), ord('~'))
-         ] + ['AD', 'Full-flowering date (DOY)', 'mag', 'time']
+header = ['AD', 'Full-flowering date (DOY)', 'mag', 'time']
+#             chr(c) 
+#             for c
+#             in range(ord(' '), ord('~'))
+#          ] + 
 
 add0 = lambda num: str(num) if num >= 10 else f'0{num}'
 
