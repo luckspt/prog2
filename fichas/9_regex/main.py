@@ -1,4 +1,5 @@
 import re
+from functools import reduce
 
 # 1 - Para cada um dos casos abaixo indique quais as strings ou substrings que são reconhecidas pela expressão regular indicada.
 """
@@ -103,21 +104,106 @@ def testa_exp(er, s):
 
 
 # a) Um triplo contendo as três partes de um código postal.
-def cod_postal(txt):
-    """
-    >>> cod_postal('2795-241 Linda a Velha')
-    ('2795', '241', 'Linda a Velha')
-    """
-    pass
-
+# def cod_postal(txt):
+#     """
+#     >>> cod_postal('2795-241 Linda a Velha')
+#     ('2795', '241', 'Linda a Velha')
+#     """
+#     pass
 
 # b) Os três constituintes de uma matrícula, juntamente com a informação sobre o tipo de matrícula: letras-primeiro, letras-no-meio, letras-no-fim, números-no-meio.
-"""
->>> constituintes_matricula('AA-11-11')
-('letras-primeiro', 'AA', '11', '11')
-"""
+def constituintes_matricula(matricula):
+    """
+    >>> constituintes_matricula('AA-11-11')
+    ('letras-primeiro', 'AA', '11', '11')
+    """
+    tipos = [('letras-primeiro', r'[A-Z]{2}-\d{2}-\d{2}')
+        , ('letras-no-meio', r'\d{2}-[A-Z]{2}-\d{2}')
+        , ('letras-no-fim', r'\d{2}-\d{2}-[A-Z]{2}')
+        , ('números-no-meio', r'[A-Z]{2}-\d{2}-[A-Z]{2}')]
+
+    for tipo, regex in tipos:
+        m = re.match(regex, matricula)
+        if m:
+            return (tipo, *matricula.split('-'))
+
 # c) Um número em vírgula flutuante.
 """
 >>> numero_vf('2.3')
 2.3
 """
+
+#5 - Escreva uma função que agrupe os algarismos de um número de telefone em três.
+def num_telefone(numero):
+    """
+    >>> num_telefone("212345123")
+    '212 345 123'
+    """
+    padrao = r'(\d{3})(\d{3})(\d{3})'
+    m = re.match(padrao, numero)
+    if m: 
+        return ' '.join(m.groups()) 
+    #return ' '.join(re.findall(r'\d{3}', numero))
+
+#6 - Extração de padrões. Para cada alínea escreva uma função que:
+# a) Devolva uma lista com todas as ocorrências de uma expressão regular numa string.
+def todas_as_ocorrencias(regex, txt):
+    """
+    >>> todas_as_ocorrencias(r'[a-z0-9]\d','a5b2d456')
+    ['a5', 'b2', 'd4', '56']
+    """
+    return re.findall(regex, txt)
+
+# b) Devolva uma lista com todas as ocorrências de uma expressão regular numa lista de strings.
+def todas_as_ocorrencias_lista(regex, lstTxt):
+    """
+    >>> todas_as_ocorrencias_lista(r'[a-z0-9]\d',['a5b2d456','a456b'])
+    ['a5', 'b2', 'd4', '56', 'a4', '56']
+    """
+    res = []
+    for txt in lstTxt:
+        res += todas_as_ocorrencias(regex, txt)
+    return res
+
+# c) Calcule o número de matrículas que ocorrem numa lista de strings.
+def numero_de_matriculas(acidentes):
+    """
+    >>> acidente1 = 'AF-12-70 colidiu com 43-PP-98 que embateu em 98-00-AP'
+    >>> acidente2 = '43-PQ-98 colidiu com 43-PJ-98 que embateu em AG-00-11'
+    >>> numero_de_matriculas([acidente1, acidente2])
+    6
+    """
+    regex = r'[A-Z]{2}-\d{2}-\d{2}|\d{2}-[A-Z]{2}-\d{2}|\d{2}-\d{2}-[A-Z]{2}|[A-Z]{2}-\d{2}-[A-Z]{2}'
+    return len(todas_as_ocorrencias_lista(regex, acidentes))
+
+# d) Obtenha a lista de matrículas que ocorrem numa lista de strings, mas apenas aquelas em que um par de  letras começa por uma letra dada.
+def lista_matriculas(acidentes, letra):
+    """
+    >>> lista_matriculas([acidente1, acidente2], 'A')
+    ['AF-12-70', '98-00-AP', 'AG-00-11']
+    """
+    regex = r'[A-Z]{2}-\d{2}-\d{2}|\d{2}-[A-Z]{2}-\d{2}|\d{2}-\d{2}-[A-Z]{2}|[A-Z]{2}-\d{2}-[A-Z]{2}'
+    matriculas = todas_as_ocorrencias_lista(regex, acidentes)
+    return [plate for plate in matriculas if re.search(letra, plate)]
+    
+#8 - Escreva uma função que, dada uma lista de strings, devolva um dicionário com cinco campos: número de matrículas do tipo letras-primeiro, número de matrículas do tipo letras-no-meio, número de matrículas do tipo letras-no-fim, número de matrículas do tipo números-no-meio, e número de strings que não representam matrículas.
+def dic_matriculas(matriculas):
+    """
+    >>> ll = ['AF-12-70', '98-00-AP', 'AG-00-11', '43-PP-98', '43-PQ-98', '43-PJ-98', 'AB-44-HQ', 'dd-333']
+    >>> dic_matriculas(ll)
+    {'letras-primeiro': 2, 'letras-no-meio': 3, 'letras-no-fim': 1, 'numeros-no-meio': 1, 'invalida': 1}
+    """
+    res = { 'letras-primeiro': 0
+            , 'letras-no-meio': 0
+            , 'letras-no-fim': 0
+            , 'números-no-meio': 0
+            , 'invalida': 0 }
+
+    for matricula in matriculas:
+        constituintes = constituintes_matricula(matricula)
+        if constituintes:
+            res[constituintes[0]] += 1
+        else:
+            res['invalida'] += 1
+            
+    return res
